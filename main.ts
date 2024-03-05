@@ -2,6 +2,7 @@ import { ItemView, Plugin } from 'obsidian';
 
 function resizeNode(node: any, resizeType: 'tb' | 'lr') {
 	const i = node.child;
+	const textLength = !!i.text.length;
 	const previewEl = i.previewMode.renderer.previewEl;
 	if (!previewEl.isShown())
 		return;
@@ -15,8 +16,8 @@ function resizeNode(node: any, resizeType: 'tb' | 'lr') {
 			if (Math.abs(distance) < .5)
 				break;
 			node.resize({
-				width: node.width,
-				height: node.height + distance
+				width: textLength ? node.width : 40,
+				height: textLength ? (node.height + distance) : 40
 			});
 			node.render();
 			node.canvas.requestSave();
@@ -46,7 +47,7 @@ function resizeNode(node: any, resizeType: 'tb' | 'lr') {
 			}
 		}
 
-		node.resize({width: max, height: node.height});
+		node.resize({width: textLength ? max : 40, height: textLength ? node.height : 40});
 
 		if (previewEl.scrollHeight > scrollHeightForPreview) {
 			node.resize({width: initialWidth, height: node.height});
